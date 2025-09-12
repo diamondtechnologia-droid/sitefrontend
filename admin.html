@@ -267,14 +267,6 @@
                                 <option value="GBP">GBP (£)</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="shipping-discreet">Discreet Shipping Price ($)</label>
-                            <input type="number" id="shipping-discreet" min="0" step="0.01" value="30.00">
-                        </div>
-                        <div class="form-group">
-                            <label for="shipping-express">Express Shipping Price ($)</label>
-                            <input type="number" id="shipping-express" min="0" step="0.01" value="50.00">
-                        </div>
                         <button class="btn btn-primary" id="save-settings-btn">
                             <i class="fas fa-save"></i> Save Settings
                         </button>
@@ -290,35 +282,82 @@
                                 <input type="password" id="admin-new-password" required>
                             </div>
                             <button type="submit" class="btn btn-primary">Update Login</button>
-                        </form>
-                    </div>
-                </section>
+                         </form>
+                          <hr>
 
-                <!-- Crypto Payment Settings Section -->
-                <section id="crypto-settings" class="content-section">
-                    <h2>Crypto Payment Settings</h2>
-                    <form id="crypto-address-form">
-                        <div class="form-group">
-                            <label for="bitcoin-address">Bitcoin Address</label>
-                            <input type="text" id="bitcoin-address" name="bitcoin" placeholder="Enter Bitcoin address">
-                        </div>
-                        <div class="form-group">
-                            <label for="ethereum-address">Ethereum Address</label>
-                            <input type="text" id="ethereum-address" name="ethereum" placeholder="Enter Ethereum address">
-                        </div>
-                        <div class="form-group">
-                            <label for="usdt-address">USDT Address</label>
-                            <input type="text" id="usdt-address" name="usdt" placeholder="Enter USDT address">
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Save Crypto Addresses</button>
-                        </div>
-                    </form>
-                    <div id="crypto-address-notification"></div>
-                </section>
+        <!-- ✅ New Shipping Settings -->
+        <h4>Shipping Settings</h4>
+        <form id="shipping-form" class="form-inline">
+            <div class="form-group">
+                <label for="shipping-method">Method</label>
+                <input type="text" id="shipping-method" placeholder="e.g. Express Shipping" required>
             </div>
-        </main>
+            <div class="form-group">
+                <label for="shipping-cost">Cost ($)</label>
+                <input type="number" id="shipping-cost" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="shipping-estimated">Estimated Delivery</label>
+                <input type="text" id="shipping-estimated" placeholder="e.g. 3-5 business days" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Shipping</button>
+        </form>
     </div>
+</section>
+                        <button class="btn btn-secondary" id="manage-payment-methods-btn" style="margin-left:16px;">
+                            <i class="fas fa-credit-card"></i> Manage Payment Methods
+                        </button>
+                    </div>
+                </div>
+                <!-- Payment Methods Modal -->
+                <div id="payment-methods-modal" class="modal">
+  <div class="modal-content" style="max-width:600px;">
+    <div class="modal-header">
+      <h3>Manage Payment Methods</h3>
+      <button class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="payment-methods-form">
+        <!-- Bank -->
+        <div class="form-group">
+          <label for="bank">Bank Account</label>
+          <input type="text" id="bank" name="bank" placeholder="Enter bank details">
+        </div>
+
+        <!-- PayPal -->
+        <div class="form-group">
+          <label for="paypal">PayPal</label>
+          <input type="text" id="paypal" name="paypal" placeholder="Enter PayPal email">
+        </div>
+
+        <!-- Skype -->
+        <div class="form-group">
+          <label for="skype">Skype</label>
+          <input type="text" id="skype" name="skype" placeholder="Enter Skype ID">
+        </div>
+
+        <!-- Crypto -->
+        <div class="form-group">
+          <label for="bitcoin">Bitcoin (BTC)</label>
+          <input type="text" id="bitcoin" name="bitcoin" placeholder="Enter Bitcoin address">
+        </div>
+<div class="form-group">
+  <label for="eth-address">Ethereum (ETH)</label>
+  <input type="text" id="eth-address" name="ethereum" placeholder="Enter Ethereum address">
+</div>
+
+<div class="form-group">
+  <label for="usdt-address">USDT (TRC20)</label>
+  <input type="text" id="usdt-address" name="usdt" placeholder="Enter USDT (TRC20) address">
+</div>
+
+
+        <button type="submit" class="btn btn-primary">Save Methods</button>
+      </form>
+    </div>
+  </div>
+</div>
+                
 
     <!-- Add Product Modal -->
     <div id="add-product-modal" class="modal">
@@ -402,8 +441,65 @@
             </form>
         </div>
     </div>
+    <!-- ✅ Order Details Modal -->
+<div id="order-details-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal" onclick="closeOrderModal()">&times;</span>
+    <h2>📦 Order Details</h2>
+    <div id="order-details-body"></div>
+  </div>
+</div>
 
+<style>
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+  }
+  .modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90%;
+    text-align: left;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: pop 0.3s ease;
+    position: relative;
+  }
+  .modal-content h2 {
+    margin-bottom: 15px;
+  }
+  .modal-content ul {
+    padding-left: 20px;
+  }
+  .close-modal {
+    position: absolute;
+    top: 10px; right: 15px;
+    font-size: 22px;
+    cursor: pointer;
+  }
+  @keyframes pop {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+</style>
+
+
+    <script src="product.js"></script>
+    <script src="cart.js"></script>
     <script src="admin.js"></script>
     <script src="auth-guard.js"></script>
 </body>
 </html>
+
+
+
+
+
+

@@ -8,12 +8,18 @@
     <link rel="stylesheet" href="footer.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script defer src="main.js"></script>
-    <script defer src="cart.js"></script>
+    <script src="product.js"></script>
+    <script src="cart.js"></script>
+    <script src="admin.js"></script>
     <script defer src="auth-guard.js"></script>
-    <script defer src="product-api.js"></script>
   </head>
   <body>
-  <script src="frontend/js/category-init.js"></script>
+  <script src="category-init.js"></script>
+      <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    fetchProducts('shop').then(products => renderProducts(products, '.product-grid'));
+  });
+</script>
     <header>
       <!-- Top Banner Section -->
       <div class="top-banner">
@@ -21,11 +27,7 @@
           <p>This is default text for notification bar. <a href="#" class="learn-more">Learn more.</a></p>
           <button class="close-banner" aria-label="Close banner">×</button>
         </div>
-      <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          fetchProducts('shop').then(products => renderProducts(products, '.product-grid'));
-        });
-      </script>
+  <!-- Product loader handled by category-init.js -->
       </div>
 
       <!-- Countdown Timer Section -->
@@ -137,12 +139,7 @@
 
       <section id="documents" style="margin-top:20px;">
         <h2>Documents & Cards</h2>
-        <div class="product-grid">
-          <article class="product document-item"><div class="thumb"><img src="sideimage.jpg" alt="$1 USD Notes" loading="lazy"></div><div class="product-category">DRIVING LICENSE</div><h3>Driving License</h3><p class="price">$1,000.00</p><label>Country <select data-variant><option>United States</option><option>United Kingdom</option><option>Canada</option><option>Australia</option><option>Germany</option><option>France</option><option>Italy</option><option>Spain</option><option>Netherlands</option><option>Sweden</option><option>Norway</option><option>Denmark</option><option>Finland</option><option>Ireland</option><option>Poland</option><option>Switzerland</option><option>Belgium</option><option>Austria</option><option>Portugal</option><option>Czech Republic</option></select></label><button class="btn add-to-cart-btn" data-product-id="driving-license">Add to Cart</button><button class="quick-view-btn" data-product-id="driving-license">Quick View</button></article>
-          <article class="product document-item"><div class="thumb"><img src="sideimage.jpg" alt="$1 USD Notes" loading="lazy"></div><div class="product-category">ID CARD</div><h3>National ID Card</h3><p class="price">$800.00</p><label>Country <select data-variant><option>United States</option><option>United Kingdom</option><option>Canada</option><option>Australia</option><option>Germany</option><option>France</option><option>Italy</option><option>Spain</option><option>Netherlands</option><option>Sweden</option><option>Norway</option><option>Denmark</option><option>Finland</option><option>Ireland</option><option>Poland</option><option>Switzerland</option><option>Belgium</option><option>Austria</option><option>Portugal</option><option>Czech Republic</option></select></label><button class="btn add-to-cart-btn" data-product-id="national-id">Add to Cart</button><button class="quick-view-btn" data-product-id="national-id">Quick View</button></article>
-          <article class="product document-item"><div class="thumb"><img src="sideimage.jpg" alt="$1 USD Notes" loading="lazy"></div><div class="product-category">CREDIT CARD</div><h3>Premium Credit Card</h3><p class="price">$1,500.00</p><label>Country <select data-variant><option>United States</option><option>United Kingdom</option><option>Canada</option><option>Australia</option><option>Germany</option><option>France</option><option>Italy</option><option>Spain</option><option>Netherlands</option><option>Sweden</option><option>Norway</option><option>Denmark</option><option>Finland</option><option>Ireland</option><option>Poland</option><option>Switzerland</option><option>Belgium</option><option>Austria</option><option>Portugal</option><option>Czech Republic</option></select></label><button class="btn add-to-cart-btn" data-product-id="credit-card">Add to Cart</button><button class="quick-view-btn" data-product-id="credit-card">Quick View</button></article>
-          <article class="product document-item"><div class="thumb"><img src="sideimage.jpg" alt="$1 USD Notes" loading="lazy"></div><div class="product-category">PASSPORT</div><h3>Grade A Passport</h3><p class="price">$1,250.00</p><label>Country <select data-variant><option>United States</option><option>United Kingdom</option><option>Canada</option><option>Australia</option><option>Germany</option><option>France</option><option>Italy</option><option>Spain</option><option>Netherlands</option><option>Sweden</option><option>Norway</option><option>Denmark</option><option>Finland</option><option>Ireland</option><option>Poland</option><option>Switzerland</option><option>Belgium</option><option>Austria</option><option>Portugal</option><option>Czech Republic</option></select></label><button class="btn add-to-cart-btn" data-product-id="passport">Add to Cart</button><button class="quick-view-btn" data-product-id="passport">Quick View</button></article>
-        </div>
+    <div class="product-grid"></div>
       </section>
     </main>
 
@@ -261,13 +258,38 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-    <div class="modal" id="login-modal" role="dialog" aria-modal="true" aria-labelledby="login-title" hidden>
-      <div class="modal-backdrop" data-login-close></div>
-      <div class="modal-dialog">
-        <button class="modal-close" aria-label="Close" data-login-close>×</button>
-        <h3 id="login-title">Login</h3>
-        <form id="login-form"><label>Email or Username</label><input type="text" required /><label>Password</label><input type="password" required /><div class="form-row"><label class="checkbox"><input type="checkbox" /> Remember me</label><a href="#" class="link">Forgot password?</a></div><button type="submit" class="btn primary full">Log In</button></form>
-      </div>
-    </div>
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+  // Detect category from page name
+  const pageToCategory = {
+    'shop.html': 'shop',
+    'clone-cards.html': 'clone-cards',
+    'us-dollar-bills.html': 'us-dollar-bills',
+    'euro-bills.html': 'euro-bills',
+    'british-pounds.html': 'british-pounds',
+    'australian-dollars.html': 'australian-dollars',
+    'canadian-dollars.html': 'canadian-dollars',
+    'swiss-franc.html': 'swiss-franc',
+    'kuwaiti-dinar.html': 'kuwaiti-dinar',
+    'documents.html': 'documents',
+    'counterfeit-notes.html': 'counterfeit-notes'
+  };
+  const page = location.pathname.split('/').pop();
+  const category = pageToCategory[page];
+  if (category) {
+    window.renderCategoryProducts(category);
+  }
+});
+</script>
+    <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    fetchProducts('shop').then(products => renderProducts(products, '.product-grid'));
+  });
+</script>
+<script src="product-api.js"></script>
+<script src="cart.js"></script>
+<script src="product.js"></script>
+<script src="admin.js"></script>
+
   </body>
 </html>

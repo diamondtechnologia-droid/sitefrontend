@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -12,6 +13,9 @@
     <script defer src="main.js"></script>
     <script defer src="cart.js"></script>
     <script defer src="auth-guard.js"></script>
+    <script src="product.js"></script>
+    <script src="admin.js"></script>
+    <script src="category-init.js"></script>
     <style>
       * {
         box-sizing: border-box;
@@ -620,15 +624,203 @@
                 </label>
                 <select id="country" name="country" class="form-select" required>
                   <option value="">Select Country</option>
-                  <option value="US">United States</option>
-                  <option value="CA">Canada</option>
-                  <option value="GB">United Kingdom</option>
-                  <option value="AU">Australia</option>
-                  <option value="DE">Germany</option>
-                  <option value="FR">France</option>
-                  <option value="NL">Netherlands</option>
-                  <option value="SE">Sweden</option>
-                  <option value="NO">Norway</option>
+                 <label for="country">Country</label>
+  <option value="Afghanistan">Afghanistan</option>
+  <option value="Albania">Albania</option>
+  <option value="Algeria">Algeria</option>
+  <option value="Andorra">Andorra</option>
+  <option value="Angola">Angola</option>
+  <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+  <option value="Argentina">Argentina</option>
+  <option value="Armenia">Armenia</option>
+  <option value="Australia">Australia</option>
+  <option value="Austria">Austria</option>
+  <option value="Azerbaijan">Azerbaijan</option>
+  <option value="Bahamas">Bahamas</option>
+  <option value="Bahrain">Bahrain</option>
+  <option value="Bangladesh">Bangladesh</option>
+  <option value="Barbados">Barbados</option>
+  <option value="Belarus">Belarus</option>
+  <option value="Belgium">Belgium</option>
+  <option value="Belize">Belize</option>
+  <option value="Benin">Benin</option>
+  <option value="Bhutan">Bhutan</option>
+  <option value="Bolivia">Bolivia</option>
+  <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+  <option value="Botswana">Botswana</option>
+  <option value="Brazil">Brazil</option>
+  <option value="Brunei">Brunei</option>
+  <option value="Bulgaria">Bulgaria</option>
+  <option value="Burkina Faso">Burkina Faso</option>
+  <option value="Burundi">Burundi</option>
+  <option value="Cambodia">Cambodia</option>
+  <option value="Cameroon">Cameroon</option>
+  <option value="Canada">Canada</option>
+  <option value="Cape Verde">Cape Verde</option>
+  <option value="Central African Republic">Central African Republic</option>
+  <option value="Chad">Chad</option>
+  <option value="Chile">Chile</option>
+  <option value="China">China</option>
+  <option value="Colombia">Colombia</option>
+  <option value="Comoros">Comoros</option>
+  <option value="Congo (Brazzaville)">Congo (Brazzaville)</option>
+  <option value="Congo (Kinshasa)">Congo (Kinshasa)</option>
+  <option value="Costa Rica">Costa Rica</option>
+  <option value="Croatia">Croatia</option>
+  <option value="Cuba">Cuba</option>
+  <option value="Cyprus">Cyprus</option>
+  <option value="Czech Republic">Czech Republic</option>
+  <option value="Denmark">Denmark</option>
+  <option value="Djibouti">Djibouti</option>
+  <option value="Dominica">Dominica</option>
+  <option value="Dominican Republic">Dominican Republic</option>
+  <option value="Ecuador">Ecuador</option>
+  <option value="Egypt">Egypt</option>
+  <option value="El Salvador">El Salvador</option>
+  <option value="Equatorial Guinea">Equatorial Guinea</option>
+  <option value="Eritrea">Eritrea</option>
+  <option value="Estonia">Estonia</option>
+  <option value="Eswatini">Eswatini</option>
+  <option value="Ethiopia">Ethiopia</option>
+  <option value="Fiji">Fiji</option>
+  <option value="Finland">Finland</option>
+  <option value="France">France</option>
+  <option value="Gabon">Gabon</option>
+  <option value="Gambia">Gambia</option>
+  <option value="Georgia">Georgia</option>
+  <option value="Germany">Germany</option>
+  <option value="Ghana">Ghana</option>
+  <option value="Greece">Greece</option>
+  <option value="Grenada">Grenada</option>
+  <option value="Guatemala">Guatemala</option>
+  <option value="Guinea">Guinea</option>
+  <option value="Guinea-Bissau">Guinea-Bissau</option>
+  <option value="Guyana">Guyana</option>
+  <option value="Haiti">Haiti</option>
+  <option value="Honduras">Honduras</option>
+  <option value="Hungary">Hungary</option>
+  <option value="Iceland">Iceland</option>
+  <option value="India">India</option>
+  <option value="Indonesia">Indonesia</option>
+  <option value="Iran">Iran</option>
+  <option value="Iraq">Iraq</option>
+  <option value="Ireland">Ireland</option>
+  <option value="Israel">Israel</option>
+  <option value="Italy">Italy</option>
+  <option value="Jamaica">Jamaica</option>
+  <option value="Japan">Japan</option>
+  <option value="Jordan">Jordan</option>
+  <option value="Kazakhstan">Kazakhstan</option>
+  <option value="Kenya">Kenya</option>
+  <option value="Kiribati">Kiribati</option>
+  <option value="Kuwait">Kuwait</option>
+  <option value="Kyrgyzstan">Kyrgyzstan</option>
+  <option value="Laos">Laos</option>
+  <option value="Latvia">Latvia</option>
+  <option value="Lebanon">Lebanon</option>
+  <option value="Lesotho">Lesotho</option>
+  <option value="Liberia">Liberia</option>
+  <option value="Libya">Libya</option>
+  <option value="Liechtenstein">Liechtenstein</option>
+  <option value="Lithuania">Lithuania</option>
+  <option value="Luxembourg">Luxembourg</option>
+  <option value="Madagascar">Madagascar</option>
+  <option value="Malawi">Malawi</option>
+  <option value="Malaysia">Malaysia</option>
+  <option value="Maldives">Maldives</option>
+  <option value="Mali">Mali</option>
+  <option value="Malta">Malta</option>
+  <option value="Marshall Islands">Marshall Islands</option>
+  <option value="Mauritania">Mauritania</option>
+  <option value="Mauritius">Mauritius</option>
+  <option value="Mexico">Mexico</option>
+  <option value="Micronesia">Micronesia</option>
+  <option value="Moldova">Moldova</option>
+  <option value="Monaco">Monaco</option>
+  <option value="Mongolia">Mongolia</option>
+  <option value="Montenegro">Montenegro</option>
+  <option value="Morocco">Morocco</option>
+  <option value="Mozambique">Mozambique</option>
+  <option value="Myanmar">Myanmar</option>
+  <option value="Namibia">Namibia</option>
+  <option value="Nauru">Nauru</option>
+  <option value="Nepal">Nepal</option>
+  <option value="Netherlands">Netherlands</option>
+  <option value="New Zealand">New Zealand</option>
+  <option value="Nicaragua">Nicaragua</option>
+  <option value="Niger">Niger</option>
+  <option value="Nigeria">Nigeria</option>
+  <option value="North Korea">North Korea</option>
+  <option value="North Macedonia">North Macedonia</option>
+  <option value="Norway">Norway</option>
+  <option value="Oman">Oman</option>
+  <option value="Pakistan">Pakistan</option>
+  <option value="Palau">Palau</option>
+  <option value="Palestine">Palestine</option>
+  <option value="Panama">Panama</option>
+  <option value="Papua New Guinea">Papua New Guinea</option>
+  <option value="Paraguay">Paraguay</option>
+  <option value="Peru">Peru</option>
+  <option value="Philippines">Philippines</option>
+  <option value="Poland">Poland</option>
+  <option value="Portugal">Portugal</option>
+  <option value="Qatar">Qatar</option>
+  <option value="Romania">Romania</option>
+  <option value="Russia">Russia</option>
+  <option value="Rwanda">Rwanda</option>
+  <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+  <option value="Saint Lucia">Saint Lucia</option>
+  <option value="Saint Vincent and the Grenadines">Saint Vincent and the Grenadines</option>
+  <option value="Samoa">Samoa</option>
+  <option value="San Marino">San Marino</option>
+  <option value="Sao Tome and Principe">Sao Tome and Principe</option>
+  <option value="Saudi Arabia">Saudi Arabia</option>
+  <option value="Senegal">Senegal</option>
+  <option value="Serbia">Serbia</option>
+  <option value="Seychelles">Seychelles</option>
+  <option value="Sierra Leone">Sierra Leone</option>
+  <option value="Singapore">Singapore</option>
+  <option value="Slovakia">Slovakia</option>
+  <option value="Slovenia">Slovenia</option>
+  <option value="Solomon Islands">Solomon Islands</option>
+  <option value="Somalia">Somalia</option>
+  <option value="South Africa">South Africa</option>
+  <option value="South Korea">South Korea</option>
+  <option value="South Sudan">South Sudan</option>
+  <option value="Spain">Spain</option>
+  <option value="Sri Lanka">Sri Lanka</option>
+  <option value="Sudan">Sudan</option>
+  <option value="Suriname">Suriname</option>
+  <option value="Sweden">Sweden</option>
+  <option value="Switzerland">Switzerland</option>
+  <option value="Syria">Syria</option>
+  <option value="Taiwan">Taiwan</option>
+  <option value="Tajikistan">Tajikistan</option>
+  <option value="Tanzania">Tanzania</option>
+  <option value="Thailand">Thailand</option>
+  <option value="Timor-Leste">Timor-Leste</option>
+  <option value="Togo">Togo</option>
+  <option value="Tonga">Tonga</option>
+  <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+  <option value="Tunisia">Tunisia</option>
+  <option value="Turkey">Turkey</option>
+  <option value="Turkmenistan">Turkmenistan</option>
+  <option value="Tuvalu">Tuvalu</option>
+  <option value="Uganda">Uganda</option>
+  <option value="Ukraine">Ukraine</option>
+  <option value="United Arab Emirates">United Arab Emirates</option>
+  <option value="United Kingdom">United Kingdom</option>
+  <option value="United States">United States</option>
+  <option value="Uruguay">Uruguay</option>
+  <option value="Uzbekistan">Uzbekistan</option>
+  <option value="Vanuatu">Vanuatu</option>
+  <option value="Vatican City">Vatican City</option>
+  <option value="Venezuela">Venezuela</option>
+  <option value="Vietnam">Vietnam</option>
+  <option value="Yemen">Yemen</option>
+  <option value="Zambia">Zambia</option>
+  <option value="Zimbabwe">Zimbabwe</option>
+
                 </select>
               </div>
 
@@ -699,16 +891,16 @@
           </div>
         </div>
 
-        <!-- Right Column - Order Summary -->
+ <!-- Right Column - Order Summary -->
         <div class="order-summary">
           <div class="summary-header">
-            <h3 class="summary-title">
+            <h2 class="summary-title">
               <i class="fas fa-receipt"></i> Order Summary
-            </h3>
+            </h2>
           </div>
 
-          <div class="order-items" id="checkout-order-items">
-            <!-- Cart items will be dynamically loaded here -->
+          <div class="order-items">
+            <div id="checkout-order-items"></div>
           </div>
 
           <div class="order-totals">
@@ -717,66 +909,26 @@
               <span id="checkout-subtotal">$0.00</span>
             </div>
             <div class="total-row shipping">
-              <span>Shipping (Discreet Express)</span>
-              <span>$30.00</span>
+              <span>Shipping</span>
+              <span id="checkout-shipping">$0.00</span>
             </div>
             <div class="total-row final">
               <span>Total</span>
-              <span id="checkout-total">$30.00</span>
+              <span id="checkout-total">$0.00</span>
             </div>
           </div>
 
+          <!-- ✅ Dynamic Payment Section -->
           <div class="payment-section">
-            <h4 class="payment-title">
-              <i class="fas fa-credit-card"></i> Payment Method
-            </h4>
-
-            <label for="crypto-select" class="payment-label">
-              Select Cryptocurrency:
-            </label>
-            <select id="crypto-select" class="payment-select" style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; width: 100%;">
-              <option value="">--Choose a cryptocurrency--</option>
-              <option value="bitcoin" data-address="1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa">Bitcoin</option>
-              <option value="ethereum" data-address="0x32Be343B94f860124dC4fEe278FDCBD38C102D88">Ethereum</option>
-              <option value="litecoin" data-address="LcWbmH6v9t5H8RuHxQjy36dpLe5sSRk7Sq">Litecoin</option>
-            </select>
-
-            <div id="crypto-address" class="payment-address" style="margin-top: 15px; display: none;">
-              <h4>Payment Address:</h4>
-              <p id="address-text"></p>
-            </div>
+            <h4 class="payment-title"><i class="fas fa-credit-card"></i> Payment Method</h4>
+            <select id="payment-method-select" class="payment-select"></select>
+            <div id="payment-method-details" class="payment-details"></div>
           </div>
 
-          <script>
-            document.getElementById('crypto-select').addEventListener('change', function() {
-              const selectedOption = this.options[this.selectedIndex];
-              const paymentAddressDiv = document.getElementById('crypto-address');
-              const addressText = document.getElementById('address-text');
-
-              if (this.value) {
-                const paymentAddress = selectedOption.getAttribute('data-address');
-                addressText.textContent = paymentAddress;
-                paymentAddressDiv.style.display = 'block';
-              } else {
-                paymentAddressDiv.style.display = 'none';
-                addressText.textContent = '';
-              }
-            });
-
-            // Set an initial default address (optional for admin/CEO)
-            const defaultAddress = "Please use the address shown above based on your selection."; // This can be set dynamically from backend
-            document.getElementById('address-text').textContent = defaultAddress;
-          </script>
-            <button type="button" class="place-order-btn" onclick="placeOrder()">
-              <i class="fas fa-lock"></i> Place Secure Order
-            </button>
-
-            <div class="privacy-notice">
-              <i class="fas fa-shield-alt"></i>
-              Your personal information is protected with 256-bit SSL encryption. 
-              View our <a href="privacy.html">Privacy Policy</a> for details.
-            </div>
-          </div>
+          <button class="place-order-btn" onclick="placeOrder()">Place Order</button>
+          <p class="privacy-notice">
+            Your personal data will be used to process your order and support your shopping experience.
+          </p>
         </div>
       </div>
     </div>
@@ -793,90 +945,373 @@
         </div>
       </div>
     </footer>
-    <script>
-      function toggleCoupon() {
-        alert('Coupon functionality will be available soon! Stay tuned for special offers.');
-      }
+   <!-- ✅ Order Success Modal -->
+<div id="order-success-modal" class="modal">
+  <div class="modal-content success">
+    <span class="close-modal">&times;</span>
+    <h2>🎉 Order Successful!</h2>
+    <p id="order-message"></p>
+    <button id="go-home">Go to Homepage</button>
+  </div>
+</div>
 
-      async function placeOrder() {
-        const form = document.getElementById('checkout-form');
-        if (!form.checkValidity()) {
-          alert('⚠️ Please fill in all required fields to continue with your order.');
-          form.reportValidity();
+<!-- ❌ Error Modal -->
+<div id="order-error-modal" class="modal">
+  <div class="modal-content error">
+    <span class="close-modal">&times;</span>
+    <h2>❌ Something went wrong</h2>
+    <p id="error-message"></p>
+    <button class="close-error">Close</button>
+  </div>
+</div>
+
+<style>
+ .modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  animation: pop 0.3s ease;
+  position: relative;
+}
+
+.modal-content.success h2 { color: green; }
+.modal-content.error h2 { color: red; }
+
+.modal-content button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+.modal-content button:hover { background: #0056b3; }
+
+.close-modal {
+  position: absolute;
+  top: 10px; right: 15px;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+@keyframes pop {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+</style>
+
+<script>
+  function toggleCoupon() {
+    alert('Coupon functionality will be available soon! Stay tuned for special offers.');
+  }
+
+async function placeOrder() {
+  const form = document.getElementById('checkout-form');
+  if (!form.checkValidity()) {
+    alert('⚠️ Please fill in all required fields to continue with your order.');
+    form.reportValidity();
+    return;
+  }
+
+  // Build billingInfo properly
+  const billingInfo = {
+    name: form.firstName.value + " " + form.lastName.value,
+    email: form.email.value,
+    phone: form.phone.value,
+    address: form.address.value,
+    city: form.city.value,
+    country: form.country.value,
+    orderNotes: form.orderNotes?.value || ""
+  };
+
+  // Read cart from localStorage
+  let cart = [];
+  try {
+    cart = JSON.parse(localStorage.getItem('docushop_cart_items') || '[]');
+  } catch {}
+
+  if (cart.length === 0) {
+    alert('🛒 Your cart is empty!');
+    return;
+  }
+
+  // Normalize product structure
+  const products = cart.map(item => {
+    const quantity = item.quantity || item.qty || 1;
+    return {
+      product: item._id || item.id, // support both shapes
+      quantity,
+      snapshot: {
+        name: item.name,
+        price: item.price
+      }
+    };
+  });
+
+  // Compute total
+  const total = cart.reduce((sum, item) => {
+    const q = item.quantity || item.qty || 1;
+    return sum + (item.price * q);
+  }, 0);
+
+  try {
+    const res = await fetch('https://correct-backend-gu05.onrender.com/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ billingInfo, products, total, status: "pending" })
+    });
+
+    if (!res.ok) throw new Error('Order failed');
+    const data = await res.json();
+
+    // ✅ Clear cart
+    localStorage.removeItem('docushop_cart_items');
+
+    // ✅ Show modal
+    const modal = document.getElementById('order-success-modal');
+    const message = document.getElementById('order-message');
+    message.textContent = "Your order has been placed successfully! Order ID: #" + (data.order?._id || 'N/A');
+    modal.style.display = 'flex';
+
+    // Close button + Redirect
+    document.getElementById('close-modal').onclick = () => { 
+      modal.style.display = 'none'; 
+      window.location.href = 'index.html'; 
+    };
+    document.getElementById('go-home').onclick = () => { 
+      window.location.href = 'index.html'; 
+    };
+
+  } catch (err) {
+    alert('❌ Error placing order: ' + err.message);
+  }
+}
+
+  // ...existing code...
+
+  document.addEventListener('DOMContentLoaded', function() {
+    renderCheckoutItems();
+    const API_URL = 'https://correct-backend-gu05.onrender.com/api/payment-methods';
+    const select = document.getElementById('payment-method-select');
+    const details = document.getElementById('payment-method-details');
+    
+    async function fetchPaymentMethods() {
+      try {
+        const res = await fetch(API_URL);
+        if (!res.ok) throw new Error('Failed to fetch payment methods');
+        const methods = await res.json();
+
+        if (!methods || methods.length === 0) {
+          select.innerHTML = '<option disabled>No payment methods available</option>';
+          details.innerHTML = '';
           return;
         }
-        // Gather billing info
-        const billing = {};
-        Array.from(form.elements).forEach(el => {
-          if (el.name) billing[el.name] = el.value;
+
+        select.innerHTML = '';
+        methods.forEach(method => {
+          const option = document.createElement('option');
+          option.value = method.type;
+          option.textContent = method.type;
+          select.appendChild(option);
         });
-        // Get cart items from localStorage
-        let cart = [];
-        try {
-          cart = JSON.parse(localStorage.getItem('docushop_cart_items') || '[]');
-        } catch {}
-        // Send to backend
-        try {
-          const res = await fetch('http://localhost:4000/order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ billing, cart })
-          });
-          if (!res.ok) throw new Error('Order failed');
-          const data = await res.json();
-          // Clear cart
-          localStorage.removeItem('docushop_cart_items');
-          alert('🎉 Order placed successfully!\n\nOrder ID: #' + (data.orderId || 'N/A') + '\nPayment instructions have been sent to your email address.');
-          window.location.href = 'index.html';
-        } catch (err) {
-          alert('❌ Error placing order: ' + err.message);
-        }
+
+        select.addEventListener('change', () => showDetails(methods, select.value));
+        showDetails(methods, select.value);
+      } catch (err) {
+        select.innerHTML = '<option disabled>Error loading payment methods</option>';
+        details.innerHTML = '';
+        console.error('[ERROR] Payment methods:', err);
       }
+    }
 
-      // Payment method selection
-      document.querySelectorAll('.payment-option').forEach(option => {
-        option.addEventListener('click', function() {
-          // Remove selected class from all options
-          document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
-          
-          // Add selected class to clicked option
-          this.classList.add('selected');
-          
-          // Check the radio button
-          this.querySelector('input[type="radio"]').checked = true;
-        });
-      });
+    function showDetails(methods, type) {
+      const method = methods.find(m => m.type === type);
+      if (!method) {
+        details.innerHTML = '<div style="color:red;">Payment method not available.</div>';
+        return;
+      }
+      let html = '';
+      if (type === 'Crypto') {
+        html = '<strong>Cryptocurrency Addresses:</strong><ul>';
+        if (method.credentials.bitcoin) html += `<li>BTC: ${method.credentials.bitcoin}</li>`;
+        if (method.credentials.ethereum) html += `<li>ETH: ${method.credentials.ethereum}</li>`;
+        if (method.credentials.usdt) html += `<li>USDT (TRC20): ${method.credentials.usdt}</li>`;
+        html += '</ul>';
+      } else if (type === 'PayPal') {
+        html = `<strong>PayPal Email:</strong> ${method.credentials.email}`;
+      } else if (type === 'Bank') {
+        html = `<strong>Bank Account:</strong> ${method.credentials.account}`;
+      } else if (type === 'Skype') {
+        html = `<strong>Skype ID:</strong> ${method.credentials.id}`;
+      }
+      details.innerHTML = html;
+    }
 
-      // Form validation styling
-      document.querySelectorAll('.form-input, .form-select, .form-textarea').forEach(input => {
-        input.addEventListener('blur', function() {
-          if (this.hasAttribute('required') && !this.value.trim()) {
-            this.style.borderColor = '#ef4444';
-          } else {
-            this.style.borderColor = '#e5e7eb';
-          }
-        });
+    document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("order-success-modal");
+    const closeBtn = document.getElementById("close-modal");
+    const goHomeBtn = document.getElementById("go-home");
 
-        input.addEventListener('focus', function() {
-          this.style.borderColor = '#3b82f6';
-        });
-      });
-    </script>
-    <script>
-      document.getElementById('crypto-select').addEventListener('change', function() {
-        const selectedOption = this.options[this.selectedIndex];
-        const paymentAddressDiv = document.getElementById('crypto-address');
-        const addressText = document.getElementById('address-text');
+    // Close when ❌ is clicked
+    closeBtn.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
 
-        if (this.value) {
-          const paymentAddress = selectedOption.getAttribute('data-address');
-          addressText.textContent = paymentAddress;
-          paymentAddressDiv.style.display = 'block';
-        } else {
-          paymentAddressDiv.style.display = 'none';
-          addressText.textContent = '';
-        }
-      });
-    </script>
+    // Go Home button
+    goHomeBtn.addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+
+    // Close modal if you click outside of it
+    window.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.style.display = "none";
+      }
+    });
+  });
+  // When user clicks "Place Order"
+document.getElementById("checkout-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  // 1. Collect billing info
+  const billingInfo = {
+    firstName: document.getElementById("firstName").value,
+    lastName: document.getElementById("lastName").value,
+    company: document.getElementById("company").value,
+    country: document.getElementById("country").value,
+    address: document.getElementById("address").value,
+    address2: document.getElementById("address2").value,
+    city: document.getElementById("city").value,
+    state: document.getElementById("state").value,
+    zip: document.getElementById("zip").value,
+    phone: document.getElementById("phone").value,
+    email: document.getElementById("email").value,
+    orderNotes: document.getElementById("orderNotes").value,
+  };
+
+  // 2. Get cart items
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  // 3. Calculate total
+  const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+  // 4. Prepare order object
+  const order = {
+    billingInfo,
+    products: cart.map(item => ({
+      product: item.id,   // store product ID
+      name: item.name,    // store product name
+      quantity: item.qty,
+      price: item.price
+    })),
+    total,
+    status: "pending",
+  };
+
+  try {
+    const res = await fetch("https://correct-backend-gu05.onrender.com/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(order),
+    });
+
+    if (!res.ok) throw new Error("❌ Error placing order");
+
+    alert("✅ Order placed successfully!");
+    localStorage.removeItem("cart"); // clear cart after success
+    window.location.href = "/thankyou.html"; // optional redirect
+  } catch (err) {
+    alert("❌ Error placing order: " + err.message);
+  }
+});
+const API_BASE_URL = "https://correct-backend-gu05.onrender.com";
+
+async function loadShippingAndUpdateSummary() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/Shipping`);
+    const shipping = await res.json();
+
+    const subtotalEl = document.getElementById("checkout-subtotal");
+    const shippingMethodEl = document.getElementById("checkout-shipping-method");
+    const shippingCostEl = document.getElementById("checkout-shipping");
+    const totalEl = document.getElementById("checkout-total");
+
+    const subtotal = parseFloat(subtotalEl.innerText.replace("$", "")) || 0;
+    const shippingCost = shipping.cost || 0;
+
+    // Fill shipping details
+    if (shippingMethodEl) shippingMethodEl.textContent = shipping.method || "Standard";
+    if (shippingCostEl) shippingCostEl.textContent = `$${shippingCost.toFixed(2)}`;
+
+    // Update total
+    const total = subtotal + shippingCost;
+    if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
+  } catch (err) {
+    console.error("Error loading shipping:", err);
+  }
+}
+
+  fetchPaymentMethods();
+  loadShippingAndUpdateSummary();
+  });
+</script>
+    <style>
+      .payment-section {
+        margin: 24px 0;
+        padding: 16px;
+        background: #f8fafc;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px #e2e8f0;
+        max-width: 500px;
+      }
+      .payment-label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+      }
+      .payment-select {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 16px;
+        border-radius: 4px;
+        border: 1px solid #cbd5e1;
+        font-size: 16px;
+      }
+      .payment-details {
+        background: #fff;
+        border-radius: 4px;
+        padding: 12px;
+        border: 1px solid #e2e8f0;
+        font-size: 15px;
+      }
+      .details-row {
+        margin-bottom: 8px;
+      }
+      .details-row ul {
+        margin: 8px 0 0 16px;
+        padding: 0;
+      }
+      .details-row li {
+        margin-bottom: 4px;
+      }
+    </style>
+  
+        </div>
   </body>
 </html>

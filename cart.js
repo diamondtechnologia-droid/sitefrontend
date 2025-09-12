@@ -16,29 +16,7 @@
     writeCart(items);
     updateCartDetails();
     updateCartTotal();
-    renderCheckoutItems();
-  }
-
-  function removeItem(id, variant){
-    writeCart(readCart().filter(x => !(x.id === id && x.variant === variant)));
-    updateCartDetails();
-    updateCartTotal();
-    renderCheckoutItems();
-  }
-
-  function setQty(id, variant, qty){
-    const items = readCart();
-    const it = items.find(x => x.id === id && x.variant === variant);
-    if (it){ it.qty = Math.max(1, qty|0); }
-    writeCart(items);
-    updateCartDetails();
-    updateCartTotal();
-    renderCheckoutItems();
-  }
-
-  function clearCart(){
-    writeCart([]);
-    updateCartDetails();
+    // User login removed. Anyone can checkout.
     updateCartTotal();
     renderCheckoutItems();
   }
@@ -93,31 +71,76 @@
     });
   }
 
-  function renderCheckoutItems(){
-    const items = readCart();
-    const container = document.getElementById('checkout-order-items');
-    if (!container) return;
-    
-    container.innerHTML = '';
-    
-    if (items.length === 0) {
-      container.innerHTML = '<div class="order-item"><div class="item-info"><div class="item-name">No items in cart</div></div><div class="item-price">$0.00</div></div>';
-      return;
-    }
-    
-    items.forEach(item => {
-      const orderItem = document.createElement('div');
-      orderItem.className = 'order-item';
-      orderItem.innerHTML = `
+  // --- Enhanced Checkout Item Rendering ---
+  function renderCheckoutItems() {
+  const items = readCart();
+  const container = document.getElementById('checkout-order-items');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  if (items.length === 0) {
+    container.innerHTML = `
+      <div class="order-item">
         <div class="item-info">
-          <div class="item-name">${item.name}</div>
-          <div class="item-quantity">Quantity: ${item.qty}${item.variant && item.variant !== 'default' ? ` (${item.variant})` : ''}</div>
+          <div class="item-name">No items in cart</div>
         </div>
-        <div class="item-price">$${(item.price * item.qty).toFixed(2)}</div>
-      `;
-      container.appendChild(orderItem);
-    });
+        <div class="item-price">$0.00</div>
+      </div>`;
+    return;
   }
+
+  items.forEach(item => {
+    const orderItem = document.createElement('div');
+    orderItem.className = 'order-item';
+    orderItem.innerHTML = `
+      <div class="item-info">
+        <div class="item-name">${item.name}</div>
+        <div class="item-quantity">
+          Quantity: ${item.qty}${item.variant && item.variant !== 'default' ? ` (${item.variant})` : ''}
+        </div>
+      </div>
+      <div class="item-price">$${(item.price * item.qty).toFixed(2)}</div>
+      <button 
+        class="remove-item-btn" 
+        data-product-id="${item.id}" 
+        data-variant="${item.variant || ''}" 
+        title="Remove" 
+        style="background:none;border:none;color:#ef4444;font-size:18px;cursor:pointer;margin-left:12px;">
+        &times;
+      </button>
+    `;
+    container.appendChild(orderItem);
+  });
+
+  // Attach remove button events
+  container.querySelectorAll('.remove-item-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const productId = btn.getAttribute('data-product-id');
+      const variant = btn.getAttribute('data-variant');
+      removeItem(productId, variant);   // ✅ this now knows what to remove
+    });
+  });
+}
+
+      // Remove button logic
+     function removeItem(productId, variant = null) {
+  let items = readCart();
+
+  items = items.filter(item => {
+    if (variant) {
+      return item.id !== productId || item.variant !== variant;
+    } else {
+      return item.id !== productId;
+    }
+  });
+
+  writeCart(items);
+  updateCartDetails();
+  updateCartTotal();
+  renderCheckoutItems();
+}
+
 
   function bindAddToCart(){
     document.querySelectorAll('.add-to-cart-btn, .btn.add, .add-to-cart').forEach(btn => {
@@ -244,6 +267,15 @@
     const cartContainer = document.getElementById('cart-container');
     if (cartContainer) renderCartTable(cartContainer);
   }
+ document.addEventListener('DOMContentLoaded', init);
+  
+  // Make core cart functions global so product-api.js can call them
+window.addItem = addItem;
+window.removeItem = removeItem;
+window.updateCartDetails = updateCartDetails;
+window.updateCartTotal = updateCartTotal;
+window.renderCheckoutItems = renderCheckoutItems;
+
 
   document.addEventListener('DOMContentLoaded', init);
 })();
@@ -252,3 +284,18 @@ document.addEventListener('DOMContentLoaded', function() {
   updateCartDetails();
   updateCartTotal();
 });
+document.addEventListener('DOMContentLoaded', function() {
+  updateCartDetails();     // refresh cart icon count
+  updateCartTotal();       // refresh totals
+  renderCheckoutItems();   // refresh checkout items (if on checkout page)
+});
+// Expose cart functions globally so other scripts/pages can access them
+window.updateCartDetails = updateCartDetails;
+window.updateCartTotal = updateCartTotal;
+window.addItem = addItem;
+window.renderCheckoutItems = renderCheckoutItems;
+
+
+
+
+

@@ -1,5 +1,6 @@
 // Set API base URL for easy switching between local and deployed environments
-const API_BASE_URL = 'https://backend-crqd.onrender.com'; // Live backend URL
+const API_BASE_URL = 'https://correct-backend-gu05.onrender.com'; // Live backend URL
+
 // Admin Panel JavaScript
 class AdminPanel {
     constructor() {
@@ -15,10 +16,66 @@ class AdminPanel {
         this.loadDashboardData();
         this.loadProducts();
         this.loadUsers();
-        this.loadOrders();
+        this.loadShippingSettings();
+        fetchOrders();
     }
 
     bindEvents() {
+        // Product category filter
+        const filter = document.getElementById('product-category-filter');
+        if (filter) {
+            filter.addEventListener('change', () => this.renderProducts());
+        }
+
+        // Shipping form submit
+        const shippingForm = document.getElementById("shipping-form");
+        if (shippingForm) {
+            shippingForm.addEventListener("submit", (e) => this.saveShippingSettings(e));
+        }
+
+        // Close modal (clicking × specifically for payments)
+        const closeBtn = document.querySelector('#payment-methods-modal .modal-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                const modal = document.getElementById('payment-methods-modal');
+                if (modal) modal.style.display = 'none';
+            });
+        }
+
+        // Add user form
+        const addUserForm = document.getElementById('add-user-form');
+        if (addUserForm) {
+            addUserForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.addUser();
+            });
+        }
+
+        // Save content
+        const saveContentBtn = document.getElementById('save-content-btn');
+        if (saveContentBtn) {
+            saveContentBtn.addEventListener('click', () => {
+                this.saveContent();
+            });
+        }
+
+        // Payment methods save
+        const paymentForm = document.getElementById('payment-methods-form');
+        if (paymentForm) {
+            paymentForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await this.saveSettings();
+            });
+        }
+
+        // Close modal (clicking outside payments modal)
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('payment-methods-modal');
+            if (modal && e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
         // Navigation
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', (e) => {
@@ -31,47 +88,74 @@ class AdminPanel {
         // Sidebar toggle
         const sidebar = document.querySelector('.admin-sidebar');
         const backdrop = document.querySelector('.sidebar-backdrop');
-        document.getElementById('sidebar-toggle').addEventListener('click', () => {
-            sidebar.classList.toggle('open');
-            backdrop.classList.toggle('active');
-        });
-
-        // Backdrop click closes sidebar
-        backdrop.addEventListener('click', () => {
-            sidebar.classList.remove('open');
-            backdrop.classList.remove('active');
-        });
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+                backdrop.classList.toggle('active');
+            });
+        }
+        if (backdrop) {
+            backdrop.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                backdrop.classList.remove('active');
+            });
+        }
 
         // Add product button
-        document.getElementById('add-product-btn').addEventListener('click', () => {
-            this.showModal('add-product-modal');
-        });
+        const addProductBtn = document.getElementById('add-product-btn');
+        if (addProductBtn) {
+            addProductBtn.addEventListener('click', () => {
+                this.showModal('add-product-modal');
+            });
+        }
 
         // Add user button
-        document.getElementById('add-user-btn').addEventListener('click', () => {
-            this.showModal('add-user-modal');
-        });
+        const addUserBtn = document.getElementById('add-user-btn');
+        if (addUserBtn) {
+            addUserBtn.addEventListener('click', () => {
+                this.showModal('add-user-modal');
+            });
+        }
 
-        // Form submissions
-        document.getElementById('add-product-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.addProduct();
-        });
+        // Manage payment methods button
+        const managePaymentsBtn = document.getElementById('manage-payment-methods-btn');
+        if (managePaymentsBtn) {
+            managePaymentsBtn.addEventListener('click', async () => {
+                const modal = document.getElementById('payment-methods-modal');
+                if (modal) modal.style.display = 'block';
 
-        document.getElementById('add-user-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.addUser();
-        });
+                try {
+                    const res = await fetch(`${API_BASE_URL}/api/payment-methods`);
+                    if (!res.ok) throw new Error("Failed to load payment methods");
+                    const data = await res.json();
 
-        // Content save
-        document.getElementById('save-content-btn').addEventListener('click', () => {
-            this.saveContent();
-        });
+                    const bankInput = document.getElementById('bank');
+                    if (bankInput) bankInput.value = data.bank || '';
+                    const paypalInput = document.getElementById('paypal');
+                    if (paypalInput) paypalInput.value = data.paypal || '';
+                    const skypeInput = document.getElementById('skype');
+                    if (skypeInput) skypeInput.value = data.skype || '';
+                    const btcInput = document.getElementById('bitcoin');
+                    if (btcInput) btcInput.value = data.bitcoin || '';
+                    const ethInput = document.getElementById('eth-address');
+                    if (ethInput) ethInput.value = data.ethereum || '';
+                    const usdtInput = document.getElementById('usdt-address');
+                    if (usdtInput) usdtInput.value = data.usdt || '';
+                } catch (err) {
+                    window.adminPanel.showNotification("Error loading payment methods: " + err.message, "error");
+                }
+            });
+        }
 
-        // Settings save
-        document.getElementById('save-settings-btn').addEventListener('click', () => {
-            this.saveSettings();
-        });
+        // Add product form submission
+        const addProductForm = document.getElementById('add-product-form');
+        if (addProductForm) {
+            addProductForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.addProduct();
+            });
+        }
 
         // Modal close buttons
         document.querySelectorAll('.modal-close').forEach(btn => {
@@ -81,10 +165,13 @@ class AdminPanel {
         });
 
         // Logout
-        document.getElementById('logout-btn').addEventListener('click', (e) => {
-            e.preventDefault();
-            this.logout();
-        });
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.logout();
+            });
+        }
 
         // Close modals when clicking outside
         document.addEventListener('click', (e) => {
@@ -94,24 +181,19 @@ class AdminPanel {
         });
     }
 
-    showSection(sectionName) {
-        // Hide all sections
+        showSection(sectionName) {
         document.querySelectorAll('.content-section').forEach(section => {
             section.classList.remove('active');
         });
 
-        // Show selected section
         document.getElementById(sectionName).classList.add('active');
 
-        // Update navigation
         document.querySelectorAll('.nav-link').forEach(link => {
             link.classList.remove('active');
         });
         document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
 
-        // Update page title
         document.getElementById('page-title').textContent = this.getSectionTitle(sectionName);
-
         this.currentSection = sectionName;
     }
 
@@ -138,26 +220,26 @@ class AdminPanel {
     }
 
     loadDashboardData() {
-        // Load statistics
         this.updateStats();
-        
-        // Load recent activity
         this.loadRecentActivity();
     }
 
     updateStats() {
-        // These would normally come from a database
-        document.getElementById('total-users').textContent = this.users.length;
-        document.getElementById('total-products').textContent = this.products.length;
-        document.getElementById('total-orders').textContent = this.orders.length;
-        
-        // Calculate revenue
-        const revenue = this.orders.reduce((total, order) => total + order.total, 0);
-        document.getElementById('total-revenue').textContent = `$${revenue.toFixed(2)}`;
+    const totalUsers = document.getElementById('total-users');
+    if (totalUsers) totalUsers.textContent = this.users.length;
+    const totalProducts = document.getElementById('total-products');
+    if (totalProducts) totalProducts.textContent = this.products.length;
+    const totalOrders = document.getElementById('total-orders');
+    if (totalOrders) totalOrders.textContent = this.orders.length;
+
+    const revenue = this.orders.reduce((total, order) => total + order.total, 0);
+    const totalRevenue = document.getElementById('total-revenue');
+    if (totalRevenue) totalRevenue.textContent = `$${revenue.toFixed(2)}`;
     }
 
     loadRecentActivity() {
         const activityContainer = document.getElementById('recent-activity');
+        if (!activityContainer) return;
         const activities = [
             { type: 'user', text: 'New user registered', time: '2 minutes ago' },
             { type: 'order', text: 'Order #1234 completed', time: '15 minutes ago' },
@@ -199,14 +281,22 @@ class AdminPanel {
         }
     }
 
-    renderProducts() {
-        const container = document.getElementById('products-grid');
-        const filter = document.getElementById('product-category-filter');
-        let filtered = this.products;
-        if (filter && filter.value) {
-            filtered = this.products.filter(p => p.category === filter.value);
-        }
-        container.innerHTML = filtered.map(product => `
+  renderProducts() {
+    const container = document.getElementById('products-grid');
+    const filter = document.getElementById('product-category-filter');
+    let filtered = this.products;
+
+    const normalizeCategory = (cat) => {
+        return (cat || "").toLowerCase().replace(/\s+/g, "-");
+    };
+
+    if (filter && filter.value) {
+        const selected = normalizeCategory(filter.value);
+        filtered = this.products.filter(p =>
+            normalizeCategory(p.category) === selected
+        );
+    }
+           container.innerHTML = filtered.map(product => `
             <div class="product-card">
                 <div class="product-image">
                     <img src="${product.image}" alt="${product.name}" style="width: 220px; height: 220px; object-fit: cover;">
@@ -232,12 +322,10 @@ class AdminPanel {
     async addProduct() {
         const form = document.getElementById('add-product-form');
         const formData = new FormData(form);
-        // Validate required fields
         if (!formData.get('name') || !formData.get('category') || !formData.get('price') || !formData.get('image')) {
             this.showNotification('Please fill in all required fields.', 'error');
             return;
         }
-        // Add status field
         formData.append('status', 'active');
         try {
             const res = await fetch(`${API_BASE_URL}/products`, {
@@ -259,12 +347,9 @@ class AdminPanel {
     }
 
     async editProduct(id) {
-    const product = this.products.find(p => p._id === id);
+        const product = this.products.find(p => p._id === id);
         if (product) {
-            // Example: open edit modal and update product
-            // For now, just show notification
             this.showNotification('Edit functionality coming soon!', 'info');
-            // You can implement edit modal and call backend PUT /products/:id
         }
     }
 
@@ -359,66 +444,13 @@ class AdminPanel {
         }
     }
 
-    async loadOrders() {
-        try {
-            const res = await fetch(`${API_BASE_URL}/orders`);
-            if (!res.ok) throw new Error('Failed to fetch orders');
-            this.orders = await res.json();
-            this.renderOrders();
-        } catch (err) {
-            this.showNotification('Error loading orders: ' + err.message, 'error');
-        }
-    }
-
-    renderOrders() {
-        const tbody = document.getElementById('orders-tbody');
-        tbody.innerHTML = this.orders.map(order => {
-            let billing = {};
-            let cart = [];
-            try {
-                billing = JSON.parse(order.billing);
-                cart = JSON.parse(order.cart);
-            } catch {}
-            return `
-                <tr>
-                    <td>${order.id}</td>
-                    <td>${billing.firstName || ''} ${billing.lastName || ''}</td>
-                    <td>${cart.map(p => p.name).join(', ')}</td>
-                    <td>$${cart.reduce((sum, p) => sum + (p.price * p.qty), 0).toFixed(2)}</td>
-                    <td><span class="status-badge ${order.status}">${order.status}</span></td>
-                    <td>${order.created_at || ''}</td>
-                    <td>
-                        <button class="btn btn-secondary" onclick="adminPanel.viewOrder('${order.id}')">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
-        }).join('');
-    }
-
-    viewOrder(id) {
-        const order = this.orders.find(o => o.id == id);
-        if (order) {
-            let billing = {};
-            let cart = [];
-            try {
-                billing = JSON.parse(order.billing);
-                cart = JSON.parse(order.cart);
-            } catch {}
-            // Display billing and cart info in a modal or alert
-            alert(`Order #${order.id}\n\nBilling Info:\nName: ${billing.firstName || ''} ${billing.lastName || ''}\nEmail: ${billing.email || ''}\nPhone: ${billing.phone || ''}\nAddress: ${billing.address || ''}\n\nProducts:\n${cart.map(p => `${p.name} x${p.qty} ($${p.price})`).join('\n')}`);
-        }
-    }
-
-    saveContent() {
+       saveContent() {
         const heroTitle = document.getElementById('hero-title').value;
         const heroDescription = document.getElementById('hero-description').value;
         const heroButton = document.getElementById('hero-button').value;
         const siteTitle = document.getElementById('site-title').value;
         const siteDescription = document.getElementById('site-description').value;
 
-        // In real app, save to database and update live site
         const contentData = {
             hero: { title: heroTitle, description: heroDescription, button: heroButton },
             site: { title: siteTitle, description: siteDescription }
@@ -428,64 +460,38 @@ class AdminPanel {
         this.showNotification('Content saved successfully!', 'success');
     }
 
-    saveSettings() {
-        const adminEmail = document.getElementById('admin-email').value;
-        const maintenanceMode = document.getElementById('maintenance-mode').value;
-        const defaultCurrency = document.getElementById('default-currency').value;
+   async saveSettings() {
+    const bank = document.getElementById('bank').value;
+    const paypal = document.getElementById('paypal').value;
+    const skype = document.getElementById('skype').value;
+    const bitcoin = document.getElementById('bitcoin').value;
+    const ethereum = document.getElementById('eth-address').value;
+    const usdt = document.getElementById('usdt-address').value;
 
-        // In real app, save to database
-        const settings = {
-            adminEmail,
-            maintenanceMode: maintenanceMode === 'true',
-            defaultCurrency
-        };
+    try {
+const res = await fetch(`${API_BASE_URL}/api/payment-methods`, {
+  method: 'PUT',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ bank, paypal, skype, bitcoin, ethereum, usdt })
+});
 
-        localStorage.setItem('docushop_settings', JSON.stringify(settings));
-        this.showNotification('Settings saved successfully!', 'success');
+        if (!res.ok) throw new Error('Failed to save payment methods');
+
+        this.showNotification('Payment methods updated successfully!', 'success');
+        document.getElementById('payment-methods-modal').style.display = 'none';
+    } catch (err) {
+        this.showNotification('Error saving settings: ' + err.message, 'error');
     }
-
-    async loadCryptoAddresses() {
-        try {
-            const res = await fetch(`${API_BASE_URL}/crypto-addresses`);
-            if (!res.ok) throw new Error('Failed to fetch crypto addresses');
-            const data = await res.json();
-            document.getElementById('bitcoin-address').value = data.bitcoin || '';
-            document.getElementById('ethereum-address').value = data.ethereum || '';
-            document.getElementById('usdt-address').value = data.usdt || '';
-        } catch (err) {
-            this.showNotification('Error loading crypto addresses: ' + err.message, 'error');
-        }
-    }
-
-    async saveCryptoAddresses(e) {
-        e.preventDefault();
-        const bitcoin = document.getElementById('bitcoin-address').value;
-        const ethereum = document.getElementById('ethereum-address').value;
-        const usdt = document.getElementById('usdt-address').value;
-        try {
-            const res = await fetch(`${API_BASE_URL}/crypto-addresses`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ bitcoin, ethereum, usdt })
-            });
-            if (!res.ok) throw new Error('Failed to save crypto addresses');
-            this.showNotification('Crypto addresses updated!', 'success');
-        } catch (err) {
-            this.showNotification('Error saving crypto addresses: ' + err.message, 'error');
-        }
-    }
+}
 
     logout() {
         if (confirm('Are you sure you want to logout?')) {
-            // Clear session
             sessionStorage.removeItem('docushop_session');
-            // Redirect to home page
             window.location.href = 'index.html';
         }
     }
 
     showNotification(message, type = 'info') {
-        // Create notification element
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
         notification.innerHTML = `
@@ -494,19 +500,15 @@ class AdminPanel {
             <button class="notification-close">&times;</button>
         `;
 
-        // Add to page
         document.body.appendChild(notification);
 
-        // Show notification
         setTimeout(() => notification.classList.add('show'), 100);
 
-        // Auto remove after 5 seconds
         setTimeout(() => {
             notification.classList.remove('show');
             setTimeout(() => notification.remove(), 300);
         }, 5000);
 
-        // Close button
         notification.querySelector('.notification-close').addEventListener('click', () => {
             notification.classList.remove('show');
             setTimeout(() => notification.remove(), 300);
@@ -515,152 +517,223 @@ class AdminPanel {
 
     getNotificationIcon(type) {
         const icons = {
-            'success': 'check-circle',
-            'error': 'exclamation-circle',
-            'warning': 'exclamation-triangle',
-            'info': 'info-circle'
+            success: 'check-circle',
+            error: 'exclamation-circle',
+            info: 'info-circle',
+            warning: 'exclamation-triangle'
         };
         return icons[type] || 'info-circle';
     }
 }
 
-// Initialize admin panel when DOM loads
-document.addEventListener('DOMContentLoaded', () => {
-    // Check if user is admin
-    let session = sessionStorage.getItem('docushop_session');
-    if (!session) session = localStorage.getItem('docushop_session');
-    let isAdmin = false;
-    if (session) {
-        try {
-            const sessionData = JSON.parse(session);
-            isAdmin = sessionData.user && sessionData.user.role === 'admin' && sessionData.isActive;
-        } catch {}
-    }
-    if (!isAdmin) {
-        // Clear any session and redirect to admin login
-        localStorage.removeItem('docushop_session');
-        sessionStorage.removeItem('docushop_session');
-        window.location.href = 'admin-login.html';
-        return;
-    }
+window.addEventListener('DOMContentLoaded', () => {
     window.adminPanel = new AdminPanel();
-    const filter = document.getElementById('product-category-filter');
-    if (filter) {
-        filter.addEventListener('change', () => window.adminPanel.renderProducts());
+    
+});
+// =======================
+// ORDERS MANAGEMENT
+// =======================
+let ordersCache = []; // store orders for popup view
+
+async function fetchOrders() {
+  try {
+    const res = await fetch('https://correct-backend-gu05.onrender.com/orders');
+    if (!res.ok) throw new Error("Failed to fetch orders");
+
+    const orders = await res.json();
+    console.log("[DEBUG] Orders fetched:", orders);
+
+    // ✅ Save globally for viewOrderDetails
+    window.orders = orders;
+
+    const tbody = document.getElementById("orders-tbody");
+    tbody.innerHTML = "";
+
+    if (!orders || orders.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7">No orders found</td></tr>`;
+      return;
     }
-    // Crypto Payment Settings logic
-    if (document.getElementById('crypto-address-form')) {
-        window.adminPanel.loadCryptoAddresses();
-        document.getElementById('crypto-address-form').addEventListener('submit', function(e) {
-            window.adminPanel.saveCryptoAddresses(e);
+
+    orders.forEach(order => {
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${order._id}</td>
+        <td>
+          <strong>${order.billingInfo?.name || "N/A"}</strong><br>
+          <small>${order.billingInfo?.email || ""}</small><br>
+          <small>${order.billingInfo?.phone || ""}</small>
+        </td>
+        <td>
+          ${order.products && order.products.length > 0 
+            ? order.products.map(p => {
+                const productName = p.product?.name || p.snapshot?.name || "Unknown";
+                return `${productName} (x${p.quantity})`;
+              }).join("<br>")
+            : "No products"}
+        </td>
+        <td>$${order.total || 0}</td>
+        <td>${order.status || "pending"}</td>
+        <td>${new Date(order.createdAt).toLocaleString()}</td>
+        <td>
+          <button onclick="viewOrderDetails('${order._id}')">👁 View</button>
+          <button onclick="cancelOrder('${order._id}')">❌ Cancel</button>
+        </td>
+      `;
+
+      tbody.appendChild(row);
+    });
+  } catch (err) {
+    console.error("[ERROR] Fetching orders:", err);
+    const tbody = document.getElementById("orders-tbody");
+    if (tbody) {
+      tbody.innerHTML =
+        `<tr><td colspan="7" style="color:red;">Error loading orders</td></tr>`;
+    }
+  }
+}
+
+// =======================
+// CANCEL ORDER (hard delete)
+// =======================
+async function cancelOrder(orderId) {
+  if (!confirm("Are you sure you want to delete this order permanently?")) return;
+
+  try {
+    const res = await fetch(`https://correct-backend-gu05.onrender.com/orders/${orderId}`, {
+      method: "DELETE"
+    });
+
+    if (!res.ok) throw new Error("Failed to delete order");
+    alert("✅ Order deleted successfully!");
+    fetchOrders(); // Refresh the table
+  } catch (err) {
+    alert("❌ Error deleting order: " + err.message);
+  }
+}
+// ======================
+// Shipping Functions
+// ======================
+
+// Load current shipping settings
+
+async function loadShippingSettings() {
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/shipping`);
+        const data = await res.json();
+
+        if (data) {
+            document.getElementById("shipping-method").value = data.method || "";
+            document.getElementById("shipping-cost").value = data.cost || 0;
+            document.getElementById("shipping-estimated").value = data.estimatedDelivery || "";
+        }
+    } catch (err) {
+        console.error("Error loading shipping settings:", err);
+    }
+}
+
+async function saveShippingSettings(e) {
+    e.preventDefault();
+    try {
+        const method = document.getElementById("shipping-method").value;
+        const cost = parseFloat(document.getElementById("shipping-cost").value);
+        const estimatedDelivery = document.getElementById("shipping-estimated").value;
+
+        const res = await fetch(`${API_BASE_URL}/api/shipping`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ method, cost, estimatedDelivery })
         });
+
+        const data = await res.json();
+        alert("✅ Shipping settings updated!");
+    } catch (err) {
+        console.error("Error saving shipping settings:", err);
+        alert("❌ Failed to update shipping settings");
     }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const shippingForm = document.getElementById("shipping-form");
+  if (shippingForm) {
+    shippingForm.addEventListener("submit", saveShippingSettings);
+  }
+
+  // Load current settings on page load
+  loadShippingSettings();
 });
 
-// Add notification styles
-const notificationStyles = `
-    .notification {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: white;
-        border-radius: 8px;
-        padding: 16px 20px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-        z-index: 10000;
-        max-width: 400px;
-    }
 
-    .notification.show {
-        transform: translateX(0);
-    }
+// =======================
+// VIEW ORDER DETAILS
+// =======================
+function viewOrderDetails(orderId) {
+  const order = window.orders?.find(o => o._id === orderId);
+  if (!order) return alert("Order not found");
 
-    .notification-success {
-        border-left: 4px solid #059669;
-        color: #059669;
-    }
+  const billing = order.billingInfo || {};
+  const products = order.products || [];
 
-    .notification-error {
-        border-left: 4px solid #dc2626;
-        color: #dc2626;
-    }
+  const productList = products.map(p => {
+    const productName = p.product?.name || p.snapshot?.name || "Unknown";
+    const productPrice = p.product?.price || p.snapshot?.price || 0;
+    return `${productName} (x${p.quantity}) - $${(productPrice * p.quantity).toFixed(2)}`;
+  }).join("<br>");
 
-    .notification-warning {
-        border-left: 4px solid #d97706;
-        color: #d97706;
-    }
+  const detailsHtml = `
+    <h3>Order #${order._id}</h3>
+    <p><strong>Status:</strong> ${order.status}</p>
+    <p><strong>Date:</strong> ${new Date(order.createdAt).toLocaleString()}</p>
+    <hr>
+    <h4>Billing Info</h4>
+    <p><strong>Name:</strong> ${billing.name || "N/A"}</p>
+    <p><strong>Email:</strong> ${billing.email || "N/A"}</p>
+    <p><strong>Phone:</strong> ${billing.phone || "N/A"}</p>
+    <p><strong>Address:</strong> ${billing.address || ""}, ${billing.city || ""}, ${billing.country || ""}</p>
+    <hr>
+    <h4>Products</h4>
+    <p>${productList || "No products"}</p>
+    <hr>
+    <p><strong>Total:</strong> $${order.total || 0}</p>
+  `;
 
-    .notification-info {
-        border-left: 4px solid #3b82f6;
-        color: #3b82f6;
-    }
+  // Simple popup (you can style this later as a modal)
+  const popup = window.open("", "Order Details", "width=600,height=600");
+  popup.document.write(`<div style="font-family:sans-serif;padding:20px;">${detailsHtml}</div>`);
+  popup.document.close();
+}
 
-    .notification-close {
-        background: none;
-        border: none;
-        font-size: 1.2rem;
-        color: inherit;
-        cursor: pointer;
-        margin-left: auto;
-        padding: 0;
-        width: 20px;
-        height: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        transition: background 0.3s ease;
-    }
+// =======================
+// Expose globally
+// =======================
+window.fetchOrders = fetchOrders;
+window.cancelOrder = cancelOrder;
+window.viewOrderDetails = viewOrderDetails;
 
-    .notification-close:hover {
-        background: rgba(0, 0, 0, 0.1);
-    }
+// Auto-run when admin panel loads
+document.addEventListener("DOMContentLoaded", fetchOrders);
 
-    .role-badge, .status-badge {
-        padding: 4px 8px;
-        border-radius: 12px;
-        font-size: 0.8rem;
-        font-weight: 500;
-        text-transform: capitalize;
-    }
 
-    .role-badge.admin {
-        background: #fef3c7;
-        color: #92400e;
-    }
 
-    .role-badge.user {
-        background: #dbeafe;
-        color: #1e40af;
-    }
 
-    .status-badge.active {
-        background: #d1fae5;
-        color: #065f46;
-    }
 
-    .status-badge.inactive {
-        background: #fee2e2;
-        color: #991b1b;
-    }
 
-    .status-badge.completed {
-        background: #d1fae5;
-        color: #065f46;
-    }
 
-    .status-badge.pending {
-        background: #fef3c7;
-        color: #92400e;
-    }
-`;
 
-// Inject notification styles
-const styleSheet = document.createElement('style');
-styleSheet.textContent = notificationStyles;
-document.head.appendChild(styleSheet);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

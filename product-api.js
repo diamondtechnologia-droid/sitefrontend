@@ -2,62 +2,69 @@
 // Reusable script to fetch and render products from backend API
 
 async function fetchProducts(category = null) {
-  let url = 'https://backend-crqd.onrender.com/products';
+  let url = 'https://correct-backend-gu05.onrender.com/products';
   if (category) url += `?category=${encodeURIComponent(category)}`;
+  console.log('[DEBUG] fetchProducts URL:', url);
   const res = await fetch(url);
+  console.log('[DEBUG] fetchProducts response status:', res.status);
   if (!res.ok) throw new Error('Failed to fetch products');
-  return await res.json();
+  const data = await res.json();
+  console.log('[DEBUG] fetchProducts data:', data);
+  return data;
 }
 
 function renderProducts(products, containerSelector) {
-// ...existing code...
-}
   const container = document.querySelector(containerSelector);
   if (!container) return;
   container.innerHTML = '';
+  console.log('[DEBUG] renderProducts called with:', products);
+
+  if (!products || products.length === 0) {
+    container.innerHTML = '<div class="no-products">No products found for this category.</div>';
+    return;
+  }
+
   products.forEach(product => {
+    console.log('[DEBUG] Rendering product:', product);
     const el = document.createElement('article');
     el.className = 'product-card';
     el.dataset.category = product.category;
+
     el.innerHTML = `
       <div class="product-image">
-        <img src="${product.image}" alt="${product.name}" loading="lazy" style="width:220px;height:220px;object-fit:cover;">
+        <img src="${product.image}" alt="${product.name}" loading="lazy" 
+             style="width:220px;height:220px;object-fit:cover;">
       </div>
       <div class="product-info">
         <h3>${product.name}</h3>
-        <div class="price">$${product.price.toFixed(2)}</div>
-        <div class="product-review">
-          <span class="review-icon">&#9998;</span> ${product.quickReview ? product.quickReview : ''}
-        </div>
+        <div class="price">$${Number(product.price).toFixed(2)}</div>
         <p class="description">${product.description || ''}</p>
-        <button class="add-to-cart-btn" data-product-id="${product._id || product.id}">
-          <i class="fas fa-shopping-cart"></i> Add to Cart
-        </button>
-        <button class="quick-review-btn" data-product-id="${product._id || product.id}">
-          <i class="fas fa-eye"></i> Quick Review
-        </button>
+        <button class="add-to-cart-btn" data-product-id="${product._id || product.id}">Add to Cart</button>
+        <button class="quick-review-btn" data-product-id="${product._id || product.id}">Quick Review</button>
       </div>
     `;
+
     container.appendChild(el);
   });
 
-  // Add event listeners for Add to Cart and Quick Review
+  // ✅ Add to Cart buttons
   container.querySelectorAll('.add-to-cart-btn').forEach(btn => {
     btn.addEventListener('click', function(e) {
       e.preventDefault();
       const productId = btn.getAttribute('data-product-id');
       const product = products.find(p => (p._id || p.id) == productId);
       if (!product) return;
-      // Add to cart using cart.js logic
+
       if (window.addItem) {
         window.addItem({
           id: product._id || product.id,
           name: product.name,
           price: product.price,
-          variant: '',
           qty: 1
         });
       }
+
+      // Feedback
       btn.textContent = 'Added!';
       btn.style.background = '#28a745';
       setTimeout(() => {
@@ -67,7 +74,7 @@ function renderProducts(products, containerSelector) {
     });
   });
 
-  // Professional Quick Review modal
+  // ✅ Quick Review modal
   if (!document.getElementById('quick-review-modal')) {
     const modal = document.createElement('div');
     modal.id = 'quick-review-modal';
@@ -91,6 +98,7 @@ function renderProducts(products, containerSelector) {
       modal.style.display = 'none';
     };
   }
+
   const modal = document.getElementById('quick-review-modal');
   container.querySelectorAll('.quick-review-btn').forEach(btn => {
     btn.addEventListener('click', function(e) {
@@ -99,11 +107,9 @@ function renderProducts(products, containerSelector) {
       const product = products.find(p => (p._id || p.id) == productId);
       if (!product) return;
       document.getElementById('quick-review-title').textContent = product.name;
-      document.getElementById('quick-review-content').textContent = product.description || product.quickReview || 'No review available.';
+      document.getElementById('quick-review-content').textContent =
+        product.description || product.quickReview || 'No review available.';
       modal.style.display = 'flex';
     });
   });
 }
-
-// Usage example (to be placed in each product page):
-// fetchProducts('documents').then(products => renderProducts(products, '.product-grid'));
